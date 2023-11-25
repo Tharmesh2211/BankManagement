@@ -18,5 +18,6 @@ namespace BankManagement
         public long Aadhaar_Number {  get; set; }
         public string PAN_Number {  get; set; }
         public double Inital_Balance {  get; set; }  
+        public double Store_Inital_Balance { get; set; }
     }
 }

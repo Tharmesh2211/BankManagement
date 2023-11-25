@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace BankManagement
 {
-    public class AccountList
+    public class AccountList : IBankMethods
     {
         public static List<Account> accounts = null;
 
         public static Account StoreAccount = null;
         public static bool Allow { get; set; }
+
+        public static int c = 0;
+        public int z = 0;
 
         public AccountList()
         {
@@ -25,7 +28,7 @@ namespace BankManagement
         {
             try
             {
-                char x ; int c = 0;
+                char x ; 
                 do
                 {
                     Account account = new Account();
@@ -57,6 +60,8 @@ namespace BankManagement
                     account.PAN_Number = Console.ReadLine();
 
                     IsBalance(account);
+
+                    account.Store_Inital_Balance = account.Inital_Balance;
 
                     Create(account);
 
@@ -277,6 +282,7 @@ namespace BankManagement
                 {
                     if (account.AccountNumber == AccountNumber)
                     {
+                        z = 1;
                         StoreAccount = account;
                         return true;
                     }
@@ -285,6 +291,27 @@ namespace BankManagement
             }
             return false;
 
+        }
+        public virtual void Deposit()
+        {
+
+        }
+
+        public virtual void AddTransAccount(Transaction transaction)
+        {
+        }
+
+        public virtual void Withdrawal()
+        {
+        }
+
+        public virtual void ReadOneTransaction()
+        {
+        }
+
+        public virtual bool IsCount()
+        {
+            return false;
         }
     }
 }

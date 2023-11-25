@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankManagement
 {
-    internal class Transaction : AccountList
+    public class Transaction : AccountList
     { 
         public int AccountNumber {  get; set; }
         public string TransactionType {  get; set; }
@@ -17,11 +17,11 @@ namespace BankManagement
         List<Transaction> transactions = new List<Transaction>();
         
         Transaction transaction = null, StoreTransaction = null;
-        
+
         int x = 0;
         public Transaction() { }
 
-        public void Deposit()
+        public override void Deposit()
         {
             try
             {
@@ -31,10 +31,11 @@ namespace BankManagement
                     Console.Clear();
 
                     Console.WriteLine("Deposit Amount Should Be 100 Multiple !");
-                    
+                        
                     Console.Write("Enter Account Number   -  ");
                     int AccountNumber = int.Parse(Console.ReadLine());
 
+                    
                     if (FindAccount(AccountNumber))
                     {
                         Console.Write("Enter Deposit Amount  -  ");
@@ -44,12 +45,7 @@ namespace BankManagement
                         if (DepositAmount % 100 != 0)
                             continue;
 
-                        if (x == 0)
-                        {
-                            StoreAmount = StoreAccount.Inital_Balance;
-                        }
-                        x++;
-                        StoreAccount.Inital_Balance +=  DepositAmount;
+                        StoreAccount.Inital_Balance += DepositAmount;
 
                         transaction = new Transaction();
 
@@ -78,12 +74,12 @@ namespace BankManagement
             }
         }
 
-        public void AddTransAccount(Transaction transaction)
+        public override void AddTransAccount(Transaction transaction)
         {
             transactions.Add(transaction);
         }
-        
-        public void Withdrawal()
+
+        public override void Withdrawal()
         {
             try
             {
@@ -111,13 +107,9 @@ namespace BankManagement
                         {
                             Console.WriteLine("Insufficient Amount !");
                             Console.ReadKey();
-                            continue;
+                            break;
                         }
-                        if (x == 0)
-                        {
-                            StoreAmount = StoreAccount.Inital_Balance;
-                        }
-                        x++;
+                        
                         StoreAccount.Inital_Balance -= WithdrawAmount;
 
                         transaction = new Transaction();
@@ -146,7 +138,7 @@ namespace BankManagement
             }
         }
 
-        public void ReadOneTransaction()
+        public override void ReadOneTransaction()
         {
             if(IsCount())
             {
@@ -161,7 +153,7 @@ namespace BankManagement
                         if (x++ == 0)
                         {
                             Console.WriteLine("Account Number    -  " + transaction.AccountNumber);
-                            Console.WriteLine("\nOld Amount  -  " + StoreAmount);
+                            Console.WriteLine("\nOld Amount  -  " + StoreAccount.Store_Inital_Balance);
                         }
                         
                         StoreTransaction = transaction;
@@ -178,7 +170,7 @@ namespace BankManagement
             
         }
 
-        public bool IsCount()
+        public override bool IsCount()
         {
             if(transactions!=null && transactions.Count != 0)
             {
