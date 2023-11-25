@@ -10,29 +10,32 @@ namespace BankManagement
     { 
         public int AccountNumber {  get; set; }
         public string TransactionType {  get; set; }
-
         public double StoreAmount { get; set; } 
-        public double TotalBalance {  get; set; } 
+        public double TotalBalance {  get; set; }
 
-        List<Transaction> transactions = new List<Transaction>();
+        List<Transaction> transactions = null;
         
         Transaction transaction = null, StoreTransaction = null;
 
         int x = 0;
-        public Transaction() { }
+        public Transaction() 
+        {
+            transactions = new List<Transaction>();
+        }
 
         public override void Deposit()
         {
             try
             {
                 bool check = true;
+
                 while(check)
                 {
                     Console.Clear();
 
                     Console.WriteLine("Deposit Amount Should Be 100 Multiple !");
                         
-                    Console.Write("Enter Account Number   -  ");
+                    Console.Write("\nEnter Account Number To Deposit  -  ");
                     int AccountNumber = int.Parse(Console.ReadLine());
 
                     
@@ -47,13 +50,14 @@ namespace BankManagement
 
                         StoreAccount.Inital_Balance += DepositAmount;
 
-                        transaction = new Transaction();
+                        transaction = new Transaction
+                        {
+                            AccountNumber = StoreAccount.AccountNumber,
 
-                        transaction.AccountNumber = StoreAccount.AccountNumber;
+                            TransactionType = DepositAmount + " ( D )",
 
-                        transaction.TransactionType = DepositAmount + " ( D )";
-
-                        transaction.TotalBalance = StoreAccount.Inital_Balance;
+                            TotalBalance = StoreAccount.Inital_Balance
+                        };
 
                         AddTransAccount(transaction);
 
@@ -76,7 +80,14 @@ namespace BankManagement
 
         public override void AddTransAccount(Transaction transaction)
         {
-            transactions.Add(transaction);
+            try
+            {
+                transactions.Add(transaction);
+            }
+            catch(Exception ex) 
+            {
+                Console.WriteLine(ex.Message); 
+            }
         }
 
         public override void Withdrawal()
@@ -88,21 +99,20 @@ namespace BankManagement
                 while (check)
                 {
                     Console.Clear();
+                    Console.WriteLine("Withdrawal Amount Should Be 100 Multiple !");
 
-                    Console.Write("Enter Account Number   -  ");
+                    Console.Write("Enter Account Number To Witdraw  -  ");
                     int AccountNumber = int.Parse(Console.ReadLine());
 
                     if (FindAccount(AccountNumber))
                     {
-
-                        Console.WriteLine("Withdrawal Amount Should Be 100 Multiple !");
-
                         Console.Write("Enter Withdraw Amount  -  ");
 
                         int WithdrawAmount = int.Parse(Console.ReadLine());
 
                         if (WithdrawAmount % 100 != 0)
                             continue;
+
                         if (WithdrawAmount > StoreAccount.Inital_Balance)
                         {
                             Console.WriteLine("Insufficient Amount !");
@@ -112,13 +122,14 @@ namespace BankManagement
                         
                         StoreAccount.Inital_Balance -= WithdrawAmount;
 
-                        transaction = new Transaction();
+                        transaction = new Transaction
+                        {
+                            AccountNumber = StoreAccount.AccountNumber,
 
-                        transaction.AccountNumber = StoreAccount.AccountNumber;
+                            TransactionType = WithdrawAmount + " ( W )",
 
-                        transaction.TransactionType = WithdrawAmount + " ( W )";
-
-                        transaction.TotalBalance = StoreAccount.Inital_Balance;
+                            TotalBalance = StoreAccount.Inital_Balance
+                        };
 
                         AddTransAccount(transaction);
 
@@ -138,30 +149,49 @@ namespace BankManagement
             }
         }
 
+        public bool SeaarchTransAccount(int AccountNumber)
+        {
+            foreach(var transaccount in transactions)
+            {
+                if (transaccount.AccountNumber == AccountNumber)
+                    return true;
+            }
+            return false;
+        }
         public override void ReadOneTransaction()
         {
             if(IsCount())
             {
+                Console.WriteLine("\nReading Transaction Detail !!");
+
                 Console.Write("Enter Account Number   -  ");
                 int AccountNumber = int.Parse(Console.ReadLine());
                 int x = 0;
-                Console.Clear();
-                foreach (var transaction in transactions)
+                if(SeaarchTransAccount(AccountNumber) && FindAccount(AccountNumber))
                 {
-                    if (transaction.AccountNumber == AccountNumber)
+                    Console.Clear();
+                    foreach (var transaction in transactions)
                     {
-                        if (x++ == 0)
+                        if (transaction.AccountNumber == AccountNumber)
                         {
-                            Console.WriteLine("Account Number    -  " + transaction.AccountNumber);
-                            Console.WriteLine("\nOld Amount  -  " + StoreAccount.Store_Inital_Balance);
-                        }
-                        
-                        StoreTransaction = transaction;
-                        Console.WriteLine("\nTransaction Type  -  " + transaction.TransactionType);
-                    }
-                }
+                            if (x == 0)
+                            {
+                                Console.WriteLine("Account Number   -  " + transaction.AccountNumber);
+                                Console.WriteLine("\nOld Amount     -  " + StoreAccount.Store_Inital_Balance);
+                                x = 1;
+                            }
 
-                Console.WriteLine("\nAvailable Balance    -  " + StoreTransaction.TotalBalance);
+                            StoreTransaction = transaction;
+                            Console.WriteLine("\nTransaction Type  -  " + transaction.TransactionType);
+                        }
+                    }
+
+                    Console.WriteLine("\nAvailable Balance    -  " + StoreTransaction.TotalBalance);
+                }
+                else
+                {
+                    Console.WriteLine("Account Not Found !");
+                }
             }
             else
             {

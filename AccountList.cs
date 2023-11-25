@@ -14,7 +14,6 @@ namespace BankManagement
         public static bool Allow { get; set; }
 
         public static int c = 0;
-        public int z = 0;
 
         public AccountList()
         {
@@ -33,7 +32,7 @@ namespace BankManagement
                 {
                     Account account = new Account();
 
-                    account.AccountNumber+=c;
+                    account.AccountNumber += c;
 
                     Console.Write("Enter Accounter Name          :  ");
                     account.Accounter_Name = Console.ReadLine();
@@ -90,11 +89,13 @@ namespace BankManagement
                 while (check)
                 {
                     Console.WriteLine("Initial Balance Should be Above 800 !");
+
                     Console.Write("Enter Initial Balance  -  ");
                     account.Inital_Balance = double.Parse(Console.ReadLine());
 
                     if (account.Inital_Balance < 800)
                         continue;
+                   
                     check = false;
                 }
             }
@@ -109,7 +110,9 @@ namespace BankManagement
             try
             {
                 Allow = true;
+
                 accounts.Add(account);
+
                 Console.WriteLine("Account Added Successfully !!");
             }
             catch(Exception e)
@@ -270,26 +273,22 @@ namespace BankManagement
                 return true;
             }
             Allow = false;
+
             return false;
         }
         public bool FindAccount(int AccountNumber)
         {
             Console.Clear();
-            if (IsContain())
-            {
                 
                 foreach (var account in accounts)
                 {
                     if (account.AccountNumber == AccountNumber)
                     {
-                        z = 1;
                         StoreAccount = account;
                         return true;
                     }
                 }
                 return false;
-            }
-            return false;
 
         }
         public virtual void Deposit()
